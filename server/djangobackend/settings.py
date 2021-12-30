@@ -27,7 +27,9 @@ DEBUG = True
 
 APPEND_SLASH = True
 
-ALLOWED_HOSTS = ["localhost"]
+ALLOWED_HOSTS = ["localhost",
+                 "sbj3.mybluemix.net",
+                 "sbj3.us-south.cf.appdomain.cloud"]
 
 
 # Application definition

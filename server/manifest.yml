@@ -1,11 +1,11 @@
   applications:
-  - name: djangoapp
+  - name: sbj3001
     routes:
-      - route: $HOST.$DOMAIN
+      - route: sbj3.us-south.cf.appdomain.cloud
     memory: 128M
     buildpack: python_buildpack
-  - name: djangoapp-nginx
+  - name: sbj3001-nginx
     routes:
-      - route: $HOST.$DOMAIN/static
+      - route: sbj3.us-south.cf.appdomain.cloud/static
     memory: 128M
     buildpack: staticfile_buildpack
