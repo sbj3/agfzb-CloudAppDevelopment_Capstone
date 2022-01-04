@@ -34,7 +34,39 @@
                 <a class="btn btn-link" href ="#">{{ user.first_name }}({{ user.username}})</a>
                 <a class="btn btn-link" href ="{% url 'djangoapp:logout' %}">Logout</a>
             </li>
-            
+            {% else %}
+            <li>
+                <form class="form-inline" action="{% url 'djangoapp:login' %}" method = "post">
+                    {% csrf_token %}
+                    <div class="input-group">
+                        <table>
+                            <tr>
+                                <td></td>
+                            </tr>
+                        </table>
+                        
+                        <table>
+                            <tr>
+                                <td>
+                                    <input type="test" class="form-control" placeholder="Username" name="username" >
+                                    <input type="password" class="form-control" placeholder="Password" name="psw" >
+                                </td>                            
+                                <td rowspan="2">
+                                    <button class="btn btn-primary" type="submit">Login</button>
+                                </td>
+                            </tr>    
+                            {% if message %}
+                            <tr><td>
+                                <div class="alert alert-warning"> <!--Stylize the message paragraph with .alert and .alert-warning class -->                            
+                                {{ message }}
+                                </div>
+                            </td></tr>
+                            {% endif %}                    
+                        </table>
+                    </div>
+
+                </form>
+            </li>            
             {% endif %}
         </ul>
     </div>
