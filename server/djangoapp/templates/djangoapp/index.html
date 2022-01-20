@@ -52,7 +52,10 @@
                                     <input type="password" class="form-control" placeholder="Password" name="psw" >
                                 </td>
                                 <td rowspan="2">
-                                    <button class="btn btn-primary" type="submit">Login</button>
+                                    <button class="btn btn-primary" type="submit">Login</a>                                    
+                                </td>
+                                <td rowspan="2">
+                                    <a class="btn" href="{% url 'djangoapp:registration' %}">Signup</a>
                                 </td>
                             </tr>
                             {% if message %}
