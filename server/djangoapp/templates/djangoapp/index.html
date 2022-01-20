@@ -15,7 +15,7 @@
 
 <body>
 <!-- Remove this line the first time you edit this file -->
-    
+
 <!--Add a nav bar here -->
 <nav class="navbar navbar-light bg-light">
     <div class="container-fluid">
@@ -26,9 +26,9 @@
             <li>
                 <a class="text" href="{% url 'djangoapp:about' %}">About Us</a>
                 <a class="text" href="{% url 'djangoapp:contact' %}">Contact Us</a>
-            </li>                
-        </ul>    
-        <ul class="nav navbar-nav navbar-right"> 
+            </li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
             {% if user.is_authenticated %}
             <li>
                 <a class="btn btn-link" href ="#">{{ user.first_name }}({{ user.username}})</a>
@@ -44,20 +44,20 @@
                                 <td></td>
                             </tr>
                         </table>
-                        
+
                         <table>
                             <tr>
                                 <td>
                                     <input type="test" class="form-control" placeholder="Username" name="username" >
                                     <input type="password" class="form-control" placeholder="Password" name="psw" >
-                                </td>                            
+                                </td>
                                 <td rowspan="2">
                                     <button class="btn btn-primary" type="submit">Login</button>
                                 </td>
-                            </tr>    
+                            </tr>
                             {% if message %}
                             <tr><td>
-                                <div class="alert alert-warning"> <!--Stylize the message paragraph with .alert and .alert-warning class -->                            
+                                <div class="alert alert-warning"> <!--Stylize the message paragraph with .alert and .alert-warning class -->
                                 {{ message }}
                                 </div>
                             </td></tr>
@@ -66,7 +66,7 @@
                     </div>
 
                 </form>
-            </li>            
+            </li>
             {% endif %}
         </ul>
     </div>
