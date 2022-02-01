@@ -29,30 +29,36 @@ def main(dict):
 
         my_database = client[databaseName]
 
-        selector = {'dealership': {'$eq': int(dict["dealerId"])}}
+        method = dict.get('__ow_method', 'get')
 
-        fields = ["id", "name", "dealership", "review", "purchase",
-                  "purchase_date", "car_make", "car_model", "car_year", ]
-        return_by_filter = my_database.get_query_result(
-            selector, fields, raw_result=True)
-        if len(return_by_filter['docs']) == 0:
-            status_code = 404
+        if method == 'post':
+            pass
         else:
-            status_code = 200
+            selector = {'dealership': {'$eq': int(dict["dealerId"])}}
 
-        result = {
-            'headers': {'Content-Tyope': 'application/json'},
-            "statusCode": status_code,
-            'body': {'data': return_by_filter}
-        }
-        return result
+            fields = ["id", "name", "dealership", "review", "purchase",
+                      "purchase_date", "car_make", "car_model", "car_year", ]
+            return_by_filter = my_database.get_query_result(
+                selector, fields, raw_result=True)
+            if len(return_by_filter['docs']) == 0:
+                result = {
+                    'statusCode': 404,
+                    'body': "dealerId does not exist"
+                }
+            else:
+                result = {
+                    'headers': {'Content-Tyope': 'application/json'},
+                    'statusCode': 200,
+                    'body': {'data': return_by_filter}
+                }
+            return result
 
     except CloudantException as ce:
         print("unable to connect")
         return {
             "error": ce,
             "statusCode": 500,
-            "message": "Cloudand connection failed with" + ce
+            "message": "Cloudant connection failed with" + ce
         }
     except (requests.exceptions.RequestException, ConnectionResetError) as err:
         print("connection error")
