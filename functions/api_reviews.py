@@ -30,10 +30,19 @@ def main(dict):
         my_database = client[databaseName]
 
         method = dict.get('__ow_method', 'get')
-
-        if method == 'post':
-            pass
-        else:
+        dealerId = dict.get('dealerId')
+        review_to_add = dict.get('review')
+        if review_to_add:
+            my_review = my_database.create_document(review_to_add)
+            return my_review
+        elif method == 'get' and dealerId is None:
+            result = {
+                'statusCode': 404,
+                # 'error': "dealerId does not exist",
+                'body': "dealerId does not exist"
+            }
+            return result
+        elif method == 'get':
             selector = {'dealership': {'$eq': int(dict["dealerId"])}}
 
             fields = ["id", "name", "dealership", "review", "purchase",
@@ -43,6 +52,7 @@ def main(dict):
             if len(return_by_filter['docs']) == 0:
                 result = {
                     'statusCode': 404,
+                    'error': "dealerId does not exist",
                     'body': "dealerId does not exist"
                 }
             else:
@@ -52,18 +62,25 @@ def main(dict):
                     'body': {'data': return_by_filter}
                 }
             return result
+        elif method == 'post':
+            print("In POST: ", dict)
+            return {
+                "body": "in POST",
+                "statusCode": 500,
+                "message": "in post message"
+            }
 
     except CloudantException as ce:
         print("unable to connect")
         return {
-            "error": ce,
+            "error": "Cloudant connection failed with" + ce,
             "statusCode": 500,
             "message": "Cloudant connection failed with" + ce
         }
     except (requests.exceptions.RequestException, ConnectionResetError) as err:
         print("connection error")
         return {
-            "error": err,
+            "error": "Something went wrong " + err,
             "statusCode": 500,
             "message": "Something went wrong " + err
         }
