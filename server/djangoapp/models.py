@@ -11,12 +11,13 @@ from django.utils.timezone import now
 # - __str__ method to print a car make object
 class CarMake(models.Model):
 
+    id = models.AutoField(primary_key=True) 
     name = models.CharField(null=False, max_length=30)
     description = models.CharField(null=False, max_length=50)
     manufacturer = models.CharField(null=False, max_length=50)
 
     def __str__(self):
-        return self.name
+        return self.name + ", " + self.description
 
 
 
@@ -39,8 +40,8 @@ class CarModel(models.Model):
         (WAGON, 'Wagon')        
     ]
     
-    make = models.ManyToManyField(CarMake)
-    dealer_id = models.IntegerField(null=False)
+    make = models.ForeignKey(CarMake, default=1, on_delete=models.CASCADE)
+    dealer_id = models.IntegerField(null=False, default=15)
     name = models.CharField(null=False, max_length=30)
 
     type = models.CharField(
@@ -53,7 +54,7 @@ class CarModel(models.Model):
     trim = models.CharField(null=True, max_length=30)
 
     def __str__(self):
-        return self.name + self.trim + self.year.year
+        return self.name + self.trim + str(self.year)
 
 # <HINT> Create a plain Python class `CarDealer` to hold dealer data
 
