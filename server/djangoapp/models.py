@@ -20,13 +20,13 @@ class CarMake(models.Model):
         return self.name + ", " + self.description
 
 
-
-
 # <HINT> Create a Car Model model `class CarModel(models.Model):`:
-# - Many-To-One relationship to Car Make model (One Car Make has many Car Models, using ForeignKey field)
+# - Many-To-One relationship to Car Make model (One Car Make has many
+#       Car Models, using ForeignKey field)
 # - Name
 # - Dealer id, used to refer a dealer created in cloudant database
-# - Type (CharField with a choices argument to provide limited choices such as Sedan, SUV, WAGON, etc.)
+# - Type (CharField with a choices argument to provide limited choices such as
+#       Sedan, SUV, WAGON, etc.)
 # - Year (DateField)
 # - Any other fields you would like to include in car model
 # - __str__ method to print a car make object
@@ -37,7 +37,7 @@ class CarModel(models.Model):
     TYPE_CHOICES = [
         (SEDAN, 'Sedan'),
         (SUV, 'SUV'),
-        (WAGON, 'Wagon')         
+        (WAGON, 'Wagon')
     ]
 
     make = models.ForeignKey(CarMake, default=1, on_delete=models.CASCADE)
