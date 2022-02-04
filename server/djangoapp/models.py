@@ -54,7 +54,10 @@ class CarModel(models.Model):
     trim = models.CharField(null=True, max_length=30)
 
     def __str__(self):
-        return self.name + self.trim + str(self.year)
+        return self.name + ", " + \
+               self.type + ", " + \
+               self.trim + ", " + \
+               str(self.year.year)
 
 # <HINT> Create a plain Python class `CarDealer` to hold dealer data
 
