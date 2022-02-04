@@ -50,7 +50,7 @@ class CarModel(models.Model):
         choices=TYPE_CHOICES,
         default=SEDAN
     )
-    year = models.DateField(null=False)
+    year = models.DateField(default=now, null=False)
     trim = models.CharField(null=True, max_length=30)
 
     def __str__(self):
