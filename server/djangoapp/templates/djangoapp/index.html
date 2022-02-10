@@ -52,7 +52,7 @@
                                     <input type="password" class="form-control" placeholder="Password" name="psw" >
                                 </td>
                                 <td rowspan="2">
-                                    <button class="btn btn-primary" type="submit">Login</a>                                    
+                                    <button class="btn btn-primary" type="submit">Login</a>
                                 </td>
                                 <td rowspan="2">
                                     <a class="btn" href="{% url 'djangoapp:registration' %}">Signup</a>
@@ -64,7 +64,7 @@
                                 {{ message }}
                                 </div>
                             </td></tr>
-                            {% endif %}                    
+                            {% endif %}
                         </table>
                     </div>
 
@@ -75,6 +75,24 @@
     </div>
 </nav>
 <!--Add a dealer table here -->
+{% load static %}
+{% if dealer_list %}
+    <!-- {{ dealer_list }} -->
+    <ul>
+    {% for dealer in dealer_list %}
+        <div>
+            <h1><b>{{ dealer.short_name }}</b></h1>
+
+            {{ dealer.id}} {{ dealer.full_name }} <br>
+            {{ dealer.address}} <br>
+            {{ dealer.city}}, {{ dealer.st}} {{ dealer.zip}}
+            <!-- {{ dealer.id}} -->
+        </div>
+    {% endfor %}
+    </ul>
+{% else %}
+<p>No courses are available.</p>
+{% endif %}
 
 </body>
 
