@@ -2,15 +2,16 @@ import requests
 import json
 # import related models here
 from .models import CarDealer, DealerReview
-from requests.auth import HTTPBasicAuth
+# from requests.auth import HTTPBasicAuth
 
 
 def get_request(url, **kwargs):
     """
     # Create a `get_request` to make HTTP GET requests
-    # e.g., response = requests.get(url, params=params,
-    #                               headers={'Content-Type': 'application/json'},
-    #                               auth=HTTPBasicAuth('apikey', api_key))
+    # e.g., response = requests.get(
+    #       url, params=params,
+    #       headers={'Content-Type': 'application/json'},
+    #       auth=HTTPBasicAuth('apikey', api_key))
     """
     print(kwargs)
     print("GET from {} ".format(url))
@@ -20,9 +21,9 @@ def get_request(url, **kwargs):
             url,
             headers={'Content-Type': 'application/json'},
             params=kwargs)
-    except:
+    except Exception as err:
         # If any error occurs
-        print("Network exception occurred")
+        print("Network exception occurred " + str(err))
     status_code = response.status_code
     print("With status {} ".format(status_code))
     json_data = json.loads(response.text)
@@ -128,8 +129,8 @@ def get_dealers_by_state(url, state, **kwargs):
 
 def get_dealer_reviews_from_cf(url, **kwargs):
     """
-    # Create a get_dealer_reviews_from_cf method to get reviews by dealer id from
-    # a cloud function
+    # Create a get_dealer_reviews_from_cf method to get reviews by dealer id
+    # from a cloud function
     # def get_dealer_by_id_from_cf(url, dealerId):
     # - Call get_request() with specified arguments
     # - Parse JSON results into a DealerView object list
