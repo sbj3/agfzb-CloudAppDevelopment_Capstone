@@ -1,10 +1,10 @@
 from django.shortcuts import render
-from django.http import HttpResponseRedirect, HttpResponse
+# from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
-from django.shortcuts import get_object_or_404, render, redirect
+# from django.shortcuts import get_object_or_404, redirect
 from .models import CarMake, CarModel, CarDealer, DealerReview
-from .restapis import get_dealers_from_cf, get_dealer_by_id
-from .restapis import get_dealers_by_state
+from .restapis import get_dealers_from_cf
+from .restapis import get_dealers_by_state, get_dealer_by_id
 from .restapis import get_dealer_reviews_from_cf
 
 from django.contrib.auth import login, logout, authenticate
@@ -15,7 +15,8 @@ import json
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
-
+api_url = "https://us-south.functions.appdomain.cloud/api/v1/web/" + \
+          "broadus.jones%40gmail.com_dev/api/"
 
 # Create your views here.
 
@@ -102,14 +103,15 @@ def registration_request(request):
 
 
 def get_dealerships(request):
-    # Update the `get_dealerships` view to render the index page with a list of dealerships
+    # Update the `get_dealerships` view to render the index page with a list
+    # of dealerships
     # def get_dealerships(request):
     #     context = {}
     #     if request.method == "GET":
     #         return render(request, 'djangoapp/index.html', context)
     context = {}
     if request.method == "GET":
-        url = "https://us-south.functions.appdomain.cloud/api/v1/web/broadus.jones%40gmail.com_dev/api/dealership"
+        url = api_url + "dealership"
         # Get dealers from the URL
         dealerships = get_dealers_from_cf(url)
         # Concat all dealer's short name
@@ -123,7 +125,10 @@ def get_dealer_details(request, dealer_id):
     # Create a `get_dealer_details` view to render the reviews of a dealer
     context = {}
     if request.method == "GET":
-        url = "https://us-south.functions.appdomain.cloud/api/v1/web/broadus.jones%40gmail.com_dev/api/dealership?dealerId=" + dealer_id
+        url = api_url + "review?id=" + str(dealer_id)
+        reviews = get_dealer_reviews_from_cf(url, dealer_id)
+        context['review_list'] = reviews
+        return render(request, 'djangoapp/index.html', context)
 
 
 # Create a `add_review` view to submit a review

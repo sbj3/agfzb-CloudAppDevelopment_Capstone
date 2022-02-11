@@ -77,21 +77,34 @@
 <!--Add a dealer table here -->
 {% load static %}
 {% if dealer_list %}
-    <!-- {{ dealer_list }} -->
     <ul>
     {% for dealer in dealer_list %}
         <div>
             <h1><b>{{ dealer.short_name }}</b></h1>
-
-            {{ dealer.id}} {{ dealer.full_name }} <br>
-            {{ dealer.address}} <br>
-            {{ dealer.city}}, {{ dealer.st}} {{ dealer.zip}}
-            <!-- {{ dealer.id}} -->
+            {{ dealer.id }} {{ dealer.full_name }} <br>
+            {{ dealer.address }} <br>
+            {{ dealer.city }}, {{ dealer.st }} {{ dealer.zip }}
         </div>
     {% endfor %}
     </ul>
 {% else %}
-<p>No courses are available.</p>
+<p>No dealers are available.</p>
+{% endif %}
+
+{% if review_list %}
+    <ul>
+    {% for review in review_list %}
+        <div>
+            <h2>{{ review.dealership }}</h2>
+            {{ review.id }} {{ review.name }} <br>
+            {{ review.review }} <br>
+            {{ review.purchase }} {{ review.purchase_date }} <br>
+            {{ review.car_make }}, {{ review.car_model }} {{ review.car_year }}            
+        </div>
+    {% endfor %}
+    </ul>
+{% else %}
+<p>No reviews are available.</p>
 {% endif %}
 
 </body>

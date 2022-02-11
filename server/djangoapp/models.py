@@ -29,8 +29,8 @@ class CarModel(models.Model):
     #       Car Models, using ForeignKey field)
     # - Name
     # - Dealer id, used to refer a dealer created in cloudant database
-    # - Type (CharField with a choices argument to provide limited choices such as
-    #       Sedan, SUV, WAGON, etc.)
+    # - Type (CharField with a choices argument to provide limited choices such
+    #       as Sedan, SUV, WAGON, etc.)
     # - Year (DateField)
     # - Any other fields you would like to include in car model
     # - __str__ method to print a car make object
@@ -64,7 +64,6 @@ class CarModel(models.Model):
                str(self.year.year)
 
 
-
 class CarDealer:
     """
     # <HINT> Create a plain Python class `CarDealer` to hold dealer data
@@ -95,7 +94,6 @@ class CarDealer:
         return "Dealer name: " + self.full_name
 
 
-
 class DealerReview:
     """
     # <HINT> Create a plain Python class `DealerReview` to hold review data
@@ -103,7 +101,7 @@ class DealerReview:
 
     def __init__(self,  id,  name,  dealership,  review,
                  purchase, purchase_date,
-                 car_make,  car_model,  car_year, sentiment):
+                 car_make,  car_model,  car_year, sentiment=None):
         # Review id
         self.id = id
         # Review name
