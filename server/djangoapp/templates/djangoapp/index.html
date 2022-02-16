@@ -97,9 +97,9 @@
         <div>
             <h2>{{ review.dealership }}</h2>
             {{ review.id }} {{ review.name }} <br>
-            {{ review.review }} <br>
+            {{ review.review }} ({{ review.sentiment }})<br>
             {{ review.purchase }} {{ review.purchase_date }} <br>
-            {{ review.car_make }}, {{ review.car_model }} {{ review.car_year }}            
+            {{ review.car_make }}, {{ review.car_model }} {{ review.car_year }}
         </div>
     {% endfor %}
     </ul>

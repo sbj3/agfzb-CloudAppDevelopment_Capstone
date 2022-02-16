@@ -4,6 +4,16 @@ import json
 from .models import CarDealer, DealerReview
 # from requests.auth import HTTPBasicAuth
 
+from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
+
+from ibm_watson import NaturalLanguageUnderstandingV1 as NLU
+
+from ibm_watson.natural_language_understanding_v1 import Features
+from ibm_watson.natural_language_understanding_v1 import SentimentOptions
+
+# from ibm_watson.natural_language_understanding_v1 import EntitiesOptions
+# from ibm_watson.natural_language_understanding_v1 import KeywordsOptions
+
 
 def get_request(url, **kwargs):
     """
@@ -13,13 +23,17 @@ def get_request(url, **kwargs):
     #       headers={'Content-Type': 'application/json'},
     #       auth=HTTPBasicAuth('apikey', api_key))
     """
+    print("In get_request")
+
     print(kwargs)
     print("GET from {} ".format(url))
+
     try:
         # Call get method of requests library with URL and parameters
         response = requests.get(
             url,
             headers={'Content-Type': 'application/json'},
+            # auth=HTTPBasicAuth('apikey', api_key),
             params=kwargs)
     except Exception as err:
         # If any error occurs
@@ -148,6 +162,7 @@ def get_dealer_reviews_from_cf(url, dealer_id, **kwargs):
             }
     """
 
+    print("get_dealer_reviews_from_cf")
     results = []
     json_result = get_request(url, dealerId=dealer_id)
     print(json_result)
@@ -157,29 +172,65 @@ def get_dealer_reviews_from_cf(url, dealer_id, **kwargs):
         review_docs = reviews["docs"]
         # print(reviews[0])
         for review in review_docs:
+            print(review)
+
             review_id = review.get("_id")
             if review_id is not None and review_id[:7] == '_design':
                 continue
 
             review_obj = DealerReview(
-                car_make=review["car_make"],
-                car_model=review["car_model"],
-                car_year=review["car_year"],
+                car_make=review.get("car_make"),
+                car_model=review.get("car_model"),
+                car_year=review.get("car_year"),
                 dealership=review["dealership"],
                 id=review['id'],
                 name=review["name"],
-                purchase_date=review["purchase_date"],
+                purchase_date=review.get("purchase_date"),
                 purchase=review["purchase"],
                 review=review["review"],
-                sentiment=review.get("sentiment"),
+                # sentiment=review.get("sentiment"),
+                sentiment=analyze_review_sentiments(review)
                 )
             results.append(review_obj)
 
     return results
 
 
-# Create an `analyze_review_sentiments` method to call Watson NLU and
-# analyze text
-# def analyze_review_sentiments(text):
-# - Call get_request() with specified arguments
-# - Get the returned sentiment label such as Positive or Negative
+def analyze_review_sentiments(review):
+    """
+    # Create an `analyze_review_sentiments` method to call Watson NLU and
+    # analyze text
+    # def analyze_review_sentiments(text):
+    # - Call get_request() with specified arguments
+    # - Get the returned sentiment label such as Positive or Negative
+    """
+    print("In analyze_review_sentiments")
+    print(review)
+
+    nlu_api = 'h3DOoDYFxcs' + \
+              'oKpssdJDgM2' + \
+              'EpXkq0QrWTa' + \
+              'xlgETWomK3I'
+    nlu_url = 'https://api.us-south.' + \
+              'natural-language-understanding.watson.cloud.ibm.com/' + \
+              'instances/2861f31e-' + \
+              '2af8-4aa2-b27a-' + \
+              '82271176a916'
+    try:
+        authenticator = IAMAuthenticator(nlu_api)
+        nl_understanding = NLU(version='2019-07-12',
+                               authenticator=authenticator)
+        nl_understanding.set_service_url(nlu_url)
+        text = review['review']
+        response = nl_understanding.analyze(
+            text=text,
+            features=Features(
+                sentiment=SentimentOptions(targets=[text]))).get_result()
+        print("after call to NLU analyse")
+        print(response)
+        # label = json.dumps(response, indent=3)
+        label = response['sentiment']['document']['label']
+        return(label)
+    except Exception as err:
+        print("Exception from NaturalLanguageUnderstandingV1 was " + str(err))
+        return None
