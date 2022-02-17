@@ -121,7 +121,7 @@ def get_dealerships(request):
         # Concat all dealer's short name
         # dealer_names = [dealer.short_name for dealer in dealerships]
         # Return a list of dealer short name
-        context['dealer_list'] = dealerships[:10]
+        context['dealer_list'] = dealerships
         return render(request, 'djangoapp/index.html', context)
 
 
