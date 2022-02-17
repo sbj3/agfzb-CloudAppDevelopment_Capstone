@@ -2,10 +2,12 @@ from django.shortcuts import render
 # from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 # from django.shortcuts import get_object_or_404, redirect
-from .models import CarMake, CarModel, CarDealer, DealerReview
-from .restapis import get_dealers_from_cf
-from .restapis import get_dealers_by_state, get_dealer_by_id
+# from .models import CarMake, CarModel, CarDealer, DealerReview
+# from .models import DealerReview
+from .restapis import get_dealers_from_cf, get_dealer_by_id
 from .restapis import get_dealer_reviews_from_cf
+from .restapis import post_request
+# from .restapis import get_dealers_by_state
 
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
@@ -103,12 +105,14 @@ def registration_request(request):
 
 
 def get_dealerships(request):
+    """
     # Update the `get_dealerships` view to render the index page with a list
     # of dealerships
     # def get_dealerships(request):
     #     context = {}
     #     if request.method == "GET":
     #         return render(request, 'djangoapp/index.html', context)
+    """
     context = {}
     if request.method == "GET":
         url = api_url + "dealership"
@@ -122,15 +126,72 @@ def get_dealerships(request):
 
 
 def get_dealer_details(request, dealer_id):
+    """
     # Create a `get_dealer_details` view to render the reviews of a dealer
+    """
     context = {}
     if request.method == "GET":
+        url = api_url + "dealership?id=" + str(dealer_id)
+        # Get dealers from the URL
+        dealerships = get_dealer_by_id(url, dealerId=dealer_id)
+        # Concat all dealer's short name
+        # dealer_names = [dealer.short_name for dealer in dealerships]
+        # Return a list of dealer short name
+        context['dealer_list'] = dealerships[:]
+
         url = api_url + "review?id=" + str(dealer_id)
         reviews = get_dealer_reviews_from_cf(url, dealer_id)
         context['review_list'] = reviews
         return render(request, 'djangoapp/index.html', context)
 
 
-# Create a `add_review` view to submit a review
-# def add_review(request, dealer_id):
-# ...
+def add_review(request, dealer_id):
+    """
+    # Submit a review
+    """
+    response = {}
+
+    if request.user.is_authenticated:
+        # user is valid
+        """
+        sample review to post
+        {
+        "review":
+            {
+                "id": 1117,
+                "name": "Jan-Cees van de Kerk",
+                "dealership": 15,
+                "review": "Great service! Very helpful.",
+                "purchase": true,
+                "another": "field",
+                "further": "information",
+                "purchase_date": "05/16/2020",
+                "car_make": "Audi",
+                "car_model": "Car",
+                "car_year": 2018
+            }
+        }
+        """
+        review = {}
+        review["time"] = datetime.utcnow.isoformat()
+        review["name"] = "Robert"
+        review["dealership"] = dealer_id
+        review["review"] = "The service department was helpful"
+        # review["purchase"]
+        # review["purchase_date"]
+        # review["car_make"]
+        # review["car_model"]
+        # review["car_year"]
+        # review["sentiment"]
+        url = api_url + "review"
+
+        json_payload = {}
+        json_payload["review"] = review
+        response = post_request(url, json_payload, DealerId=dealer_id)
+        print(response)
+
+    else:
+        # user is not vaild - return EnvironmentError
+        response['message'] = "User is not authenticated"
+
+    return response

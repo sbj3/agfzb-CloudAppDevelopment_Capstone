@@ -44,8 +44,25 @@ def get_request(url, **kwargs):
     return json_data
 
 
-# Create a `post_request` to make HTTP POST requests
-# e.g., response = requests.post(url, params=kwargs, json=payload)
+def post_request(url, json_payload, **kwargs):
+    """
+    # Create a `post_request` to make HTTP POST requests
+    # e.g., response = requests.post(url, params=kwargs, json=payload)
+    """
+    results = []
+
+    print("in post_request")
+    print(url)
+    print(json_payload)
+    print(kwargs)
+    try:
+        response = results.post(url, params=kwargs, json=json_payload)
+        print(response)
+        results = response
+    except Exception as e:
+        print("In post_request, Exception occurred " + str(e))
+
+    return results
 
 
 def get_dealers_from_cf(url, **kwargs):
@@ -89,12 +106,12 @@ def get_dealer_by_id(url, dealerId, **kwargs):
     json_result = get_request(url, dealerId=dealerId)
     if json_result:
         # Get the row list in JSON as dealers
-        dealers = json_result["rows"]
+        dealers = json_result["docs"]
         # print(dealers[0])
         # For each dealer object
         for dealer in dealers:
             # Get its content in `doc` object
-            dealer_doc = dealer["doc"]
+            dealer_doc = dealer
             dealer_id = dealer_doc.get("_id")
             if dealer_id[:7] == '_design':
                 continue
