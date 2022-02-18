@@ -41,12 +41,6 @@
                     <div class="input-group">
                         <table>
                             <tr>
-                                <td></td>
-                            </tr>
-                        </table>
-
-                        <table>
-                            <tr>
                                 <td>
                                     <input type="test" class="form-control" placeholder="Username" name="username" >
                                     <input type="password" class="form-control" placeholder="Password" name="psw" >
@@ -86,20 +80,20 @@
             <th data-field="address">Address</th>
             <th data-field="zip">Zip</th>
             <th data-field="state" data-filter-control="select">State</th>
-            <!-- ... -->
         </tr>
     </thead>
     <tbody>
         {% for dealer in dealer_list %}
             <tr>
                 <td>{{dealer.id}}</td>
-                <td><a href="{% url 'djangoapp:dealer_details' dealer.id %}">{{dealer.full_name}}</a></td>
-                <!-- <td>{{dealer.full_name}}</td> -->
+                <td><a href="{% url 'djangoapp:dealer_details' dealer.id %}">
+                    {{dealer.full_name}}
+                </a>
+                </td>
                 <td>{{dealer.city}}</td>
                 <td>{{dealer.address}}</td>
                 <td>{{dealer.zip}}</td>
                 <td>{{dealer.st}}</td>
-                <!-- ... -->
             </tr>
         {% endfor %}
     </tbody>

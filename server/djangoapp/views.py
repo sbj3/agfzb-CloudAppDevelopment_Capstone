@@ -142,7 +142,7 @@ def get_dealer_details(request, dealer_id):
         url = api_url + "review?id=" + str(dealer_id)
         reviews = get_dealer_reviews_from_cf(url, dealer_id)
         context['review_list'] = reviews
-        return render(request, 'djangoapp/index.html', context)
+        return render(request, 'djangoapp/dealer_details.html', context)
 
 
 def add_review(request, dealer_id):

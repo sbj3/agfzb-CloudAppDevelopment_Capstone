@@ -58,7 +58,8 @@ class CarModel(models.Model):
     trim = models.CharField(null=True, max_length=30)
 
     def __str__(self):
-        return self.name + ", " + \
+        return str(self.dealer_id) + ", " + \
+               self.name + ", " + \
                self.type + ", " + \
                self.trim + ", " + \
                str(self.year.year)
