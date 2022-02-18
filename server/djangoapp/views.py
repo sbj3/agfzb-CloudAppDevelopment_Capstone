@@ -137,7 +137,12 @@ def get_dealer_details(request, dealer_id):
         # Concat all dealer's short name
         # dealer_names = [dealer.short_name for dealer in dealerships]
         # Return a list of dealer short name
-        context['dealer_list'] = dealerships[:]
+        # print(repr(dealerships))
+        # print(len(dealerships))
+        # print(repr(dealerships[0]))
+        # context['dealer_list'] = dealerships[:]
+        if len(dealerships) > 0:
+            context['dealer'] = dealerships[0]
 
         url = api_url + "review?id=" + str(dealer_id)
         reviews = get_dealer_reviews_from_cf(url, dealer_id)
@@ -187,7 +192,7 @@ def add_review(request, dealer_id):
 
         json_payload = {}
         json_payload["review"] = review
-        response = post_request(url, json_payload, DealerId=dealer_id)
+        response = post_request(url, json_payload, dealerId=dealer_id)
         print(response)
 
     else:
