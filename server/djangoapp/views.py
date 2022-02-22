@@ -2,7 +2,8 @@ from django.shortcuts import render
 # from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 # from django.shortcuts import get_object_or_404, redirect
-# from .models import CarMake, CarModel, CarDealer, DealerReview
+from .models import CarMake, CarModel, CarDealer, DealerReview
+from django.views import generic, View
 # from .models import DealerReview
 from .restapis import get_dealers_from_cf, get_dealer_by_id
 from .restapis import get_dealer_reviews_from_cf
@@ -150,11 +151,16 @@ def get_dealer_details(request, dealer_id):
         return render(request, 'djangoapp/dealer_details.html', context)
 
 
-def add_review(request, dealer_id):
+def add_review(request, dealer_id=None):
     """
     # Submit a review
     """
+    print("in add_review: ")
+    print(request)
+    print(dealer_id)
     response = {}
+    print(request.user.is_authenticated)
+    print(request.method)
 
     if request.user.is_authenticated:
         # user is valid
@@ -177,26 +183,54 @@ def add_review(request, dealer_id):
             }
         }
         """
-        review = {}
-        review["time"] = datetime.utcnow.isoformat()
-        review["name"] = "Robert"
-        review["dealership"] = dealer_id
-        review["review"] = "The service department was helpful"
-        # review["purchase"]
-        # review["purchase_date"]
-        # review["car_make"]
-        # review["car_model"]
-        # review["car_year"]
-        # review["sentiment"]
-        url = api_url + "review"
+        context = {}
+        # If it is a GET request, just render the registration page
+        if request.method == 'GET':
+            url = api_url + "dealership?id=" + str(dealer_id)
+            dealerships = get_dealer_by_id(url, dealerId=dealer_id)
+            if len(dealerships) > 0:
+                context['dealer'] = dealerships[0]
+                car_list = CarModel.objects.filter(
+                    dealer_id=dealer_id)
+                # car_list = cars[:]
 
-        json_payload = {}
-        json_payload["review"] = review
-        response = post_request(url, json_payload, dealerId=dealer_id)
-        print(response)
+                context['car_list'] = car_list
+                print(context)
+                print(car_list)
+
+            return render(request, 'djangoapp/add_review.html', context)
+        # If it is a POST request
+        elif request.method == 'POST':
+
+            review = {}
+            review["time"] = datetime.utcnow.isoformat()
+            review["name"] = "Robert"
+            review["dealership"] = dealer_id
+            review["review"] = "The service department was helpful"
+            # review["purchase"]
+            # review["purchase_date"]
+            # review["car_make"]
+            # review["car_model"]
+            # review["car_year"]
+            # review["sentiment"]
+            url = api_url + "review"
+
+            json_payload = {}
+            json_payload["review"] = review
+            response = post_request(url, json_payload, dealerId=dealer_id)
+            print(response)
 
     else:
         # user is not vaild - return EnvironmentError
         response['message'] = "User is not authenticated"
 
     return response
+
+
+class CarListView(generic.ListView):
+    # template_name = 'onlinecourse/course_list.html'
+    context_object_name = 'car_list'
+
+    def get_queryset(self):
+        cars = CarModel.objects.order_by('name')[:10]
+        return cars

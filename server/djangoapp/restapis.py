@@ -11,9 +11,6 @@ from ibm_watson import NaturalLanguageUnderstandingV1 as NLU
 from ibm_watson.natural_language_understanding_v1 import Features
 from ibm_watson.natural_language_understanding_v1 import SentimentOptions
 
-# from ibm_watson.natural_language_understanding_v1 import EntitiesOptions
-# from ibm_watson.natural_language_understanding_v1 import KeywordsOptions
-
 
 def get_request(url, **kwargs):
     """
