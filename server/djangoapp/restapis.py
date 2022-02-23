@@ -49,12 +49,12 @@ def post_request(url, json_payload, **kwargs):
     results = []
 
     print("in post_request")
-    print(url)
-    print(json_payload)
-    print(kwargs)
+    print("url:", url)
+    print("json_payload:", json_payload)
+    print("kwargs:", kwargs)
     try:
-        response = results.post(url, params=kwargs, json=json_payload)
-        print(response)
+        response = requests.post(url, params=kwargs, json=json_payload)
+        print("back from requests.post with:", response)
         results = response
     except Exception as e:
         print("In post_request, Exception occurred " + str(e))

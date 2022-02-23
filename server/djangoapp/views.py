@@ -133,24 +133,24 @@ def get_dealer_details(request, dealer_id):
     # Create a `get_dealer_details` view to render the reviews of a dealer
     """
     context = {}
-    if request.method == "GET":
-        url = api_url + "dealership?id=" + str(dealer_id)
-        # Get dealers from the URL
-        dealerships = get_dealer_by_id(url, dealerId=dealer_id)
-        # Concat all dealer's short name
-        # dealer_names = [dealer.short_name for dealer in dealerships]
-        # Return a list of dealer short name
-        # print(repr(dealerships))
-        # print(len(dealerships))
-        # print(repr(dealerships[0]))
-        # context['dealer_list'] = dealerships[:]
-        if len(dealerships) > 0:
-            context['dealer'] = dealerships[0]
+    # if request.method == "GET":
+    url = api_url + "dealership?id=" + str(dealer_id)
+    # Get dealers from the URL
+    dealerships = get_dealer_by_id(url, dealerId=dealer_id)
+    # Concat all dealer's short name
+    # dealer_names = [dealer.short_name for dealer in dealerships]
+    # Return a list of dealer short name
+    # print(repr(dealerships))
+    # print(len(dealerships))
+    # print(repr(dealerships[0]))
+    # context['dealer_list'] = dealerships[:]
+    if len(dealerships) > 0:
+        context['dealer'] = dealerships[0]
 
-        url = api_url + "review?id=" + str(dealer_id)
-        reviews = get_dealer_reviews_from_cf(url, dealer_id)
-        context['review_list'] = reviews
-        return render(request, 'djangoapp/dealer_details.html', context)
+    url = api_url + "review?id=" + str(dealer_id)
+    reviews = get_dealer_reviews_from_cf(url, dealer_id)
+    context['review_list'] = reviews
+    return render(request, 'djangoapp/dealer_details.html', context)
 
 
 def add_review(request, dealer_id=None):
@@ -208,16 +208,27 @@ def add_review(request, dealer_id=None):
             # print("request.GET    ", request.GET)
             print("request.method ", request.method)
             print("request.POST   ", request.POST)
-            print("request.FILES  ", request.FILES)
-            print("request.COOKIES", request.COOKIES)
-            print("request.session", request.session)
+            # print("request.FILES  ", request.FILES)
+            # print("request.COOKIES", request.COOKIES)
+            # print("request.session", request.session)
             # print("request.META   ", request.META)
 
             review = {}
             review["time"] = datetime.utcnow().isoformat()
-            review["name"] = "Robert"
+            review["name"] = request.user.name
             review["dealership"] = dealer_id
-            review["review"] = "The service department was helpful"
+            review["purchase"] = request.POST.get('purchasecheck') == 'on'
+            review["purchase_date"] = request.POST.get('purchasedate')
+
+            car_id = request.POST.get('car')
+            if car_id:
+                review_car = CarModel.objects.get(
+                    dealer_id=dealer_id, id=car_id)
+                review["car_make"] = review_car["car_make"]
+                review["car_model"] = review_car["car_model"]
+                review["car_year"] = review_car["car_year"]
+            
+            # review["review"] = "The service department was helpful"
             # review["purchase"]
             # review["purchase_date"]
             # review["car_make"]
@@ -228,14 +239,18 @@ def add_review(request, dealer_id=None):
 
             json_payload = {}
             json_payload["review"] = review
+            print("ready to call post_request:", url, json_payload, dealer_id)
             response = post_request(url, json_payload, dealerId=dealer_id)
-            print(response)
+            # print(response)
+            print("back from post request with response", response)
+            # dealerId=dealer_id
 
+            return get_dealer_details(request, dealer_id)
     else:
         # user is not vaild - return EnvironmentError
         response['message'] = "User is not authenticated"
 
-    return response
+    return get_dealer_details(request, dealer_id)
 
 
 class CarListView(generic.ListView):
