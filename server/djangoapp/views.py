@@ -2,8 +2,10 @@ from django.shortcuts import render
 # from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 # from django.shortcuts import get_object_or_404, redirect
-from .models import CarMake, CarModel, CarDealer, DealerReview
-from django.views import generic, View
+from .models import CarModel
+# from .models import CarMake, CarDealer, DealerReview
+from django.views import generic
+# from django.views import View
 # from .models import DealerReview
 from .restapis import get_dealers_from_cf, get_dealer_by_id
 from .restapis import get_dealer_reviews_from_cf
@@ -11,10 +13,10 @@ from .restapis import post_request
 # from .restapis import get_dealers_by_state
 
 from django.contrib.auth import login, logout, authenticate
-from django.contrib import messages
+# from django.contrib import messages
 from datetime import datetime
 import logging
-import json
+# import json
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -88,9 +90,9 @@ def registration_request(request):
             # Check if user already exists
             User.objects.get(username=username)
             user_exist = True
-        except:
+        except Exception as err:
             # If not, simply log this is a new user
-            logger.debug("{} is new user".format(username))
+            logger.debug("{} is new user. Err: {}".format(username, err))
         if not user_exist:
             # Create user in austh_user table
             user = User.objects.create_user(
@@ -201,9 +203,18 @@ def add_review(request, dealer_id=None):
             return render(request, 'djangoapp/add_review.html', context)
         # If it is a POST request
         elif request.method == 'POST':
+            print("request:", request)
+            print("request.path   ", request.path)
+            # print("request.GET    ", request.GET)
+            print("request.method ", request.method)
+            print("request.POST   ", request.POST)
+            print("request.FILES  ", request.FILES)
+            print("request.COOKIES", request.COOKIES)
+            print("request.session", request.session)
+            # print("request.META   ", request.META)
 
             review = {}
-            review["time"] = datetime.utcnow.isoformat()
+            review["time"] = datetime.utcnow().isoformat()
             review["name"] = "Robert"
             review["dealership"] = dealer_id
             review["review"] = "The service department was helpful"
