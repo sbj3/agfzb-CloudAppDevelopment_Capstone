@@ -208,6 +208,10 @@ def add_review(request, dealer_id=None):
             # print("request.GET    ", request.GET)
             print("request.method ", request.method)
             print("request.POST   ", request.POST)
+            print("content", request.POST.get('content'))
+            print("purchasecheck", request.POST.get('purchasecheck'))
+            print("purchasedate", request.POST.get('purchasedate'))
+
             # print("request.FILES  ", request.FILES)
             # print("request.COOKIES", request.COOKIES)
             # print("request.session", request.session)
@@ -215,8 +219,11 @@ def add_review(request, dealer_id=None):
 
             review = {}
             review["time"] = datetime.utcnow().isoformat()
-            review["name"] = request.user.name
+            review["name"] = request.user.first_name + " " + \
+                request.user.last_name
             review["dealership"] = dealer_id
+            review["review"] = request.POST.get('content')
+            # review["text"] = request.POST.get('content')
             review["purchase"] = request.POST.get('purchasecheck') == 'on'
             review["purchase_date"] = request.POST.get('purchasedate')
 
@@ -224,10 +231,10 @@ def add_review(request, dealer_id=None):
             if car_id:
                 review_car = CarModel.objects.get(
                     dealer_id=dealer_id, id=car_id)
-                review["car_make"] = review_car["car_make"]
-                review["car_model"] = review_car["car_model"]
-                review["car_year"] = review_car["car_year"]
-            
+                review["car_make"] = review_car.make.name
+                review["car_model"] = review_car.name
+                review["car_year"] = review_car.year.year
+
             # review["review"] = "The service department was helpful"
             # review["purchase"]
             # review["purchase_date"]
@@ -243,6 +250,9 @@ def add_review(request, dealer_id=None):
             response = post_request(url, json_payload, dealerId=dealer_id)
             # print(response)
             print("back from post request with response", response)
+            print("response.content", response.content)
+            print("response.headers", response.headers)
+            print("response.status_code", response.status_code)
             # dealerId=dealer_id
 
             return get_dealer_details(request, dealer_id)
