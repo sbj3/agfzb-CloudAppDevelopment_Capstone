@@ -31,7 +31,7 @@
         <ul class="nav navbar-nav navbar-right">
             {% if user.is_authenticated %}
             <li>
-                <a class="btn btn-link" href ="#">{{ user.first_name }}({{ user.username}})</a>
+                <a class="btn btn-link" href ="#">{{ user.first_name }}({{ user.username }})</a>
                 <a class="btn btn-link" href ="{% url 'djangoapp:logout' %}">Logout</a>
             </li>
             {% else %}
@@ -39,12 +39,6 @@
                 <form class="form-inline" action="{% url 'djangoapp:login' %}" method = "post">
                     {% csrf_token %}
                     <div class="input-group">
-                        <table>
-                            <tr>
-                                <td></td>
-                            </tr>
-                        </table>
-
                         <table>
                             <tr>
                                 <td>
@@ -86,20 +80,20 @@
             <th data-field="address">Address</th>
             <th data-field="zip">Zip</th>
             <th data-field="state" data-filter-control="select">State</th>
-            <!-- ... -->
         </tr>
     </thead>
     <tbody>
         {% for dealer in dealer_list %}
             <tr>
                 <td>{{dealer.id}}</td>
-                <td><a href="{% url 'djangoapp:dealer_details' dealer.id %}">{{dealer.full_name}}</a></td>
-                <!-- <td>{{dealer.full_name}}</td> -->
+                <td><a href="{% url 'djangoapp:dealer_details' dealer.id %}">
+                    {{dealer.full_name}}
+                </a>
+                </td>
                 <td>{{dealer.city}}</td>
                 <td>{{dealer.address}}</td>
                 <td>{{dealer.zip}}</td>
                 <td>{{dealer.st}}</td>
-                <!-- ... -->
             </tr>
         {% endfor %}
     </tbody>

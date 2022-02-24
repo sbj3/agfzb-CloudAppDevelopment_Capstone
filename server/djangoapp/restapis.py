@@ -11,9 +11,6 @@ from ibm_watson import NaturalLanguageUnderstandingV1 as NLU
 from ibm_watson.natural_language_understanding_v1 import Features
 from ibm_watson.natural_language_understanding_v1 import SentimentOptions
 
-# from ibm_watson.natural_language_understanding_v1 import EntitiesOptions
-# from ibm_watson.natural_language_understanding_v1 import KeywordsOptions
-
 
 def get_request(url, **kwargs):
     """
@@ -52,12 +49,12 @@ def post_request(url, json_payload, **kwargs):
     results = []
 
     print("in post_request")
-    print(url)
-    print(json_payload)
-    print(kwargs)
+    print("url:", url)
+    print("json_payload:", json_payload)
+    print("kwargs:", kwargs)
     try:
-        response = results.post(url, params=kwargs, json=json_payload)
-        print(response)
+        response = requests.post(url, params=kwargs, json=json_payload)
+        print("back from requests.post with:", response)
         results = response
     except Exception as e:
         print("In post_request, Exception occurred " + str(e))
@@ -200,7 +197,7 @@ def get_dealer_reviews_from_cf(url, dealer_id, **kwargs):
                 car_model=review.get("car_model"),
                 car_year=review.get("car_year"),
                 dealership=review["dealership"],
-                id=review['id'],
+                id=review.get('id'),
                 name=review["name"],
                 purchase_date=review.get("purchase_date"),
                 purchase=review["purchase"],
